@@ -64,6 +64,8 @@ jobs:
       # to get a list of FQBN you can run: `arduino-cli board listall`
       - name: Building firmwares for ${{ matrix.esp-devices }}
         run: |
+          pwd
+          ls -la
           # Prepare sensor.h files based on `secrets-template`, because
           # we don't need real config files to build all firmwares in CI.
           cp secrets-template sensor-airquality-pir/secrets.h
