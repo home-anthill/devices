@@ -72,9 +72,12 @@ jobs:
           cp secrets-template device-ac-beko/secrets.h
           cp secrets-template device-ac-lg/secrets.h
 
-          # build
+          # build ac-beko
           cd device-ac-beko
           arduino-cli compile --fqbn esp32:esp32:${{ matrix.esp-devices }} ./device-ac-beko.ino
-          # build
+          cd ..
+
+          # build ac-lg
           cd device-ac-lg
           arduino-cli compile --fqbn esp32:esp32:${{ matrix.esp-devices }} ./device-ac-lg.ino
+          cd ..
