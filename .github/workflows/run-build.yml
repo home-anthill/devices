@@ -25,18 +25,18 @@ jobs:
           # esp32s2 is not supported.
           # more info at https://github.com/crankyoldgit/IRremoteESP8266/issues/1922
           esp-devices: [esp32, esp32s3]
-    
+
     name: Run and test
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v1
-      
+
       - name: Init arduino-cli.yaml config file and apply custom configs
         run: |
           # init with defaults
@@ -57,20 +57,24 @@ jobs:
           arduino-cli lib update-index
 
           # common libs
-          arduino-cli lib install "ArduinoJson"@6.19.4
+          arduino-cli lib install "ArduinoJson"@7.0.4
           arduino-cli lib install "HttpClient"@2.2.0
           arduino-cli lib install "PubSubClient"@2.8.0
 
           # specific libs for devices
-          arduino-cli lib install "IRremoteESP8266"@2.8.4
-      
+          arduino-cli lib install "IRremoteESP8266"@2.8.6
+
       # to get a list of FQBN you can run: `arduino-cli board listall`
       - name: Building firmwares for ${{ matrix.esp-devices }}
         run: |
           # Prepare sensor.h files based on `secrets-template`, because
           # we don't need real config files to build all firmwares in CI.
           cp secrets-template device-ac-beko/secrets.h
-        
+          cp secrets-template device-ac-lg/secrets.h
+
           # build
           cd device-ac-beko
           arduino-cli compile --fqbn esp32:esp32:${{ matrix.esp-devices }} ./device-ac-beko.ino
+          # build
+          cd device-ac-lg
+          arduino-cli compile --fqbn esp32:esp32:${{ matrix.esp-devices }} ./device-ac-lg.ino
